@@ -1,7 +1,5 @@
 # Dukaan: shop billing and inventory
 
-![CI/CD Pipeline](https://github.com/sonishifa/dukaan-inventory/actions/workflows/pipeline.yml/badge.svg)
-
 **Live app:** https://dukaan-inventory.vercel.app
 **Health check:** https://dukaan-inventory.vercel.app/api/health
 
@@ -183,12 +181,25 @@ Defined in `.github/workflows/pipeline.yml`.
 |---|---|
 | Every push to any branch | Lint, test and build, then Docker build and smoke test |
 | Pull request to `main` | The above, then deploy a preview (migrate and seed the preview DB, deploy, health check, comment the link on the PR) |
-| Push to `main` (merged PR) | The above, then migrate production, deploy to production, health check, publish the Docker image |
+| Push to `main` | The above, then migrate production, deploy to production, health check, publish the Docker image |
 
-Each job only runs if the jobs before it passed, and `main` is protected so a pull
-request cannot be merged until the checks pass. A failing test therefore never
-reaches production. Setting up the secrets, Vercel and Neon is described in
-[docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md).
+Each job only runs if the jobs before it passed, so a failing lint, test or Docker
+build stops the run before anything is deployed. Setting up the secrets, Vercel and
+Neon is described in [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md).
+
+### Deployment
+
+| Item | Value |
+|---|---|
+| Production URL | https://dukaan-inventory.vercel.app |
+| Hosting | Vercel project `dukaan`, deployed only by the pipeline (Vercel's own Git deploys are turned off in `vercel.json`) |
+| Database | Neon PostgreSQL, added through Vercel Storage |
+| GitHub secrets | `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `PRODUCTION_DATABASE_URL`, `PREVIEW_DATABASE_URL` |
+| GitHub variable | `PRODUCTION_URL`, the address the production health check calls |
+| Docker image | `ghcr.io/sonishifa/dukaan-inventory`, tagged with the commit SHA and `latest` |
+
+After a deployment, `/api/health` returns the short commit SHA in its `version`
+field, which shows exactly which commit is live.
 
 ## Project structure
 
@@ -205,10 +216,3 @@ tests/integration/               tests against a real PostgreSQL database
 Dockerfile, docker-compose.yml   container build and local stack
 ```
 
-## Team
-
-| Name | Roll number | Main responsibility |
-|---|---|---|
-| Member 1 | | |
-| Member 2 | | |
-| Member 3 | | |
