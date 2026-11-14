@@ -1,0 +1,33 @@
+{
+  "name": "dukaan",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shop billing and inventory app with a full CI/CD pipeline (Docker, GitHub Actions, Vercel)",
+  "engines": {
+    "node": ">=20.9"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "migrate": "node scripts/migrate.js",
+    "seed": "node scripts/seed.js",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "next": "^16.4.5",
+    "pg": "^8.23.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^5.1.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.5",
+    "vitest": "^5.1.0"
+  }
+}
