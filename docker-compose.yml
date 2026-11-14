@@ -1,0 +1,35 @@
+# One command starts the whole app locally:  docker compose up --build
+# App: http://localhost:3000   Database: localhost:5432 (user/password: dukaan)
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: dukaan
+      POSTGRES_PASSWORD: dukaan
+      POSTGRES_DB: dukaan
+    ports:
+      - "5432:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dukaan -d dukaan"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  app:
+    build:
+      context: .
+      args:
+        GITHUB_SHA: ${GITHUB_SHA:-}
+    environment:
+      DATABASE_URL: postgres://dukaan:dukaan@db:5432/dukaan
+      SEED_DATA: "true"
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  dbdata:
