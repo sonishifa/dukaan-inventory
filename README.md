@@ -169,7 +169,7 @@ curl -X POST http://localhost:3000/api/bills \
 Table changes are never made by hand. Each change is a new numbered SQL file in
 `migrations/`, for example `003_add_discount_to_bills.sql`. `npm run migrate` applies
 any files that have not run yet and records them in the `schema_migrations` table.
-The pipeline runs it against the preview or production database before every deployment.
+The pipeline runs it against the preview or production database before every deployment
 
 Rules: never edit a migration that has been merged; add a new one instead.
 
