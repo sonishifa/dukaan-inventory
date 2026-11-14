@@ -147,6 +147,9 @@ jobs:
       - name: Deploy to Vercel (preview)
         id: deploy
         run: |
+          # The app is already built. Removing .git stops the Vercel CLI from sending
+          # the commit author, which the Hobby plan blocks unless they are on the Vercel team.
+          rm -rf .git
           url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
@@ -202,6 +205,9 @@ jobs:
         env:
           PRODUCTION_URL: ${{ vars.PRODUCTION_URL }}
         run: |
+          # The app is already built. Removing .git stops the Vercel CLI from sending
+          # the commit author, which the Hobby plan blocks unless they are on the Vercel team.
+          rm -rf .git
           url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
           # Check the public production address if it is configured, else the new deployment
           echo "url=${PRODUCTION_URL:-$url}" >> "$GITHUB_OUTPUT"
