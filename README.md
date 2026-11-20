@@ -68,13 +68,10 @@ then published to GitHub Container Registry from `main`.
 |---|---|---|---|
 | Local | `docker compose up` or `npm run dev` | Postgres container | Sample products |
 | CI | GitHub Actions | Postgres service container, created fresh per run | Created by tests |
-| Preview | Vercel preview URL, one per pull request | Neon database (shared with production) | Sample products |
-| Production | https://dukaan-inventory.vercel.app | Neon database, created from Vercel Storage | Shop data |
+| Preview | Vercel preview URL, one per pull request | Neon `preview` branch | Sample products |
+| Production | https://dukaan-inventory.vercel.app | Neon `main` branch | Shop data |
 
-Preview and production currently share one Neon database, so each preview run also
-adds the sample products to production (existing names are skipped). To separate
-them, create a `preview` branch in Neon and set the `PREVIEW_DATABASE_URL` secret to
-its connection string.
+Preview and production use different databases, so test bills never touch real sales.
 
 ## Tech stack
 
